@@ -355,6 +355,39 @@ export const SettingsModal: React.FC = () => {
               </div>
             )}
           </div>
+
+          {/* Competition & Educational Alignment Card */}
+          <div
+            style={{
+              padding: '14px 16px',
+              borderRadius: '16px',
+              backgroundColor: 'rgba(251, 191, 36, 0.05)',
+              border: '1px solid rgba(251, 191, 36, 0.25)',
+              marginTop: '4px',
+            }}
+          >
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '6px' }}>
+              <span style={{ fontSize: '13px', fontWeight: 800, color: '#fbbf24', fontFamily: 'var(--font-display)' }}>
+                PlanetKuu • Web Edukasi Sains Anak SD
+              </span>
+              <span
+                style={{
+                  fontSize: '10.5px',
+                  fontWeight: 800,
+                  padding: '2px 8px',
+                  borderRadius: '999px',
+                  backgroundColor: 'rgba(251, 191, 36, 0.2)',
+                  color: '#fbbf24',
+                  border: '1px solid rgba(251, 191, 36, 0.3)',
+                }}
+              >
+                M-One Telkomsel
+              </span>
+            </div>
+            <p style={{ margin: 0, fontSize: '11.5px', color: '#cbd5e1', lineHeight: 1.5 }}>
+              Platform simulasi tata surya 3D ramah anak, didesain untuk tema <strong>&quot;Innovating Education Through Technology&quot;</strong> dengan subtema <strong>&quot;Web Education for Kids (untuk anak SD)&quot;</strong> selaras Kurikulum Merdeka IPAS.
+            </p>
+          </div>
         </div>
       </div>
     </div>
