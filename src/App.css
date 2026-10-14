@@ -1,0 +1,17 @@
+/* App specific responsive styles */
+@media (max-width: 768px) {
+  .hud-label {
+    display: none !important;
+  }
+
+  header[role="banner"] {
+    top: 8px !important;
+    left: 8px !important;
+    right: 8px !important;
+  }
+
+  footer[role="region"] {
+    bottom: 12px !important;
+    right: 12px !important;
+  }
+}
