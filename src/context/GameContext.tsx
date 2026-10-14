@@ -9,6 +9,7 @@ import { loadUserProgress, saveUserProgress, calculateLevel, calculateRankTitle 
 import { sound } from '../utils/sound';
 import { astroVoice } from '../utils/speech';
 import { cosmicBGM } from '../utils/bgm';
+import { getCelestialPosition } from '../utils/celestialRegistry';
 
 export type ActivePanel =
   | 'none'
@@ -28,6 +29,8 @@ export type ActivePanel =
 export interface CameraTarget {
   lookAt: [number, number, number];
   camPos: [number, number, number];
+  targetEntityId?: string;
+  camOffset?: [number, number, number];
 }
 
 export interface AstroDialogueState {
@@ -43,7 +46,11 @@ interface GameContextType {
   overviewTrigger: number;
 
   cameraTarget: CameraTarget | null;
-  flyCameraTo: (target: [number, number, number], offset?: [number, number, number]) => void;
+  flyCameraTo: (
+    target: [number, number, number],
+    offset?: [number, number, number],
+    targetEntityId?: string
+  ) => void;
 
   simulationSpeed: number;
   setSimulationSpeed: (speed: number) => void;
@@ -281,13 +288,22 @@ export const GameProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     showAstroMessage('Kembali ke pemandangan seluruh tata surya. Lihat bagaimana mereka mengelilingi Matahari!', 'happy');
   }, [showAstroMessage]);
 
-  const flyCameraTo = useCallback((target: [number, number, number], offset: [number, number, number] = [3, 2, 4]) => {
-    sound.playClick();
-    setCameraTarget({
-      lookAt: target,
-      camPos: [target[0] + offset[0], target[1] + offset[1], target[2] + offset[2]],
-    });
-  }, []);
+  const flyCameraTo = useCallback(
+    (
+      target: [number, number, number],
+      offset: [number, number, number] = [3, 2, 4],
+      targetEntityId?: string
+    ) => {
+      sound.playClick();
+      setCameraTarget({
+        lookAt: target,
+        camPos: [target[0] + offset[0], target[1] + offset[1], target[2] + offset[2]],
+        targetEntityId,
+        camOffset: offset,
+      });
+    },
+    []
+  );
 
   const openPanel = useCallback((panel: ActivePanel) => {
     sound.playModalOpen();
@@ -311,13 +327,22 @@ export const GameProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     setIsTourAutoplay(false);
 
     const firstStop = ASTRO_TOUR_STOPS[0];
+    const entityId = firstStop.relatedPlanetId || (firstStop.id === 'tour-sun' ? 'sun' : undefined);
+    const livePos = (entityId ? getCelestialPosition(entityId) : null) || {
+      x: firstStop.targetPosition[0],
+      y: firstStop.targetPosition[1],
+      z: firstStop.targetPosition[2],
+    };
+
     setCameraTarget({
-      lookAt: firstStop.targetPosition,
+      lookAt: [livePos.x, livePos.y, livePos.z],
       camPos: [
-        firstStop.targetPosition[0] + firstStop.camOffset[0],
-        firstStop.targetPosition[1] + firstStop.camOffset[1],
-        firstStop.targetPosition[2] + firstStop.camOffset[2],
+        livePos.x + firstStop.camOffset[0],
+        livePos.y + firstStop.camOffset[1],
+        livePos.z + firstStop.camOffset[2],
       ],
+      targetEntityId: entityId,
+      camOffset: firstStop.camOffset,
     });
 
     showAstroMessage(firstStop.astroSpeech, firstStop.astroMood);
@@ -333,22 +358,45 @@ export const GameProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     resetCameraOverview();
   }, [resetCameraOverview]);
 
-  const goToTourStop = useCallback((index: number) => {
-    if (index < 0 || index >= ASTRO_TOUR_STOPS.length) return;
-    sound.playTourStep();
-    setTourStepIndex(index);
-    const stop = ASTRO_TOUR_STOPS[index];
-    setCameraTarget({
-      lookAt: stop.targetPosition,
-      camPos: [
-        stop.targetPosition[0] + stop.camOffset[0],
-        stop.targetPosition[1] + stop.camOffset[1],
-        stop.targetPosition[2] + stop.camOffset[2],
-      ],
-    });
-    showAstroMessage(stop.astroSpeech, stop.astroMood);
-    astroVoice.speak(stop.astroSpeech);
-  }, [showAstroMessage]);
+  const goToTourStop = useCallback(
+    (index: number) => {
+      if (index < 0 || index >= ASTRO_TOUR_STOPS.length) return;
+      sound.playTourStep();
+      setTourStepIndex(index);
+      const stop = ASTRO_TOUR_STOPS[index];
+
+      const entityId =
+        stop.relatedPlanetId ||
+        (stop.id === 'tour-sun'
+          ? 'sun'
+          : stop.id === 'tour-iss-future'
+          ? 'iss'
+          : stop.id === 'tour-asteroids'
+          ? 'asteroids'
+          : undefined);
+
+      const livePos = (entityId ? getCelestialPosition(entityId) : null) || {
+        x: stop.targetPosition[0],
+        y: stop.targetPosition[1],
+        z: stop.targetPosition[2],
+      };
+
+      setCameraTarget({
+        lookAt: [livePos.x, livePos.y, livePos.z],
+        camPos: [
+          livePos.x + stop.camOffset[0],
+          livePos.y + stop.camOffset[1],
+          livePos.z + stop.camOffset[2],
+        ],
+        targetEntityId: entityId,
+        camOffset: stop.camOffset,
+      });
+
+      showAstroMessage(stop.astroSpeech, stop.astroMood);
+      astroVoice.speak(stop.astroSpeech);
+    },
+    [showAstroMessage]
+  );
 
   const nextTourStop = useCallback(() => {
     if (tourStepIndex < ASTRO_TOUR_STOPS.length - 1) {

@@ -4,6 +4,7 @@ import { Html } from '@react-three/drei';
 import * as THREE from 'three';
 import { useGame } from '../../context/GameContext';
 import { sound } from '../../utils/sound';
+import { updateCelestialPosition } from '../../utils/celestialRegistry';
 
 export const HalleyComet: React.FC = () => {
   const cometRef = useRef<THREE.Group>(null);
@@ -27,6 +28,7 @@ export const HalleyComet: React.FC = () => {
 
     if (cometRef.current) {
       cometRef.current.position.set(x, y, z);
+      updateCelestialPosition('comet', x, y, z);
 
       // Tail always points directly away from the Sun (0, 0, 0)
       const sunDir = new THREE.Vector3(-x, -y, -z).normalize();

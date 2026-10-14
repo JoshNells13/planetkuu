@@ -4,6 +4,7 @@ import { Html } from '@react-three/drei';
 import * as THREE from 'three';
 import { useGame } from '../../context/GameContext';
 import { sound } from '../../utils/sound';
+import { updateCelestialPosition } from '../../utils/celestialRegistry';
 
 export const CosmicEasterEggs: React.FC = () => {
   const {
@@ -81,6 +82,12 @@ export const CosmicEasterEggs: React.FC = () => {
         earthZ + Math.sin(localAngle) * issLocalDist
       );
       issRef.current.rotation.y = -localAngle;
+      updateCelestialPosition(
+        'iss',
+        issRef.current.position.x,
+        issRef.current.position.y,
+        issRef.current.position.z
+      );
     }
 
     // --- JWST Subtle Floating ---
@@ -88,6 +95,7 @@ export const CosmicEasterEggs: React.FC = () => {
       const time = Date.now() * 0.001;
       jwstRef.current.position.y = 3.5 + Math.sin(time * 0.8) * 0.2;
       jwstRef.current.rotation.y += delta * 0.03 * effective;
+      updateCelestialPosition('jwst', 22, jwstRef.current.position.y, 14);
     }
 
     // --- Aurora Pulsing ---

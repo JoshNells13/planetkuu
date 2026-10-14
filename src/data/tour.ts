@@ -116,8 +116,8 @@ export const ASTRO_TOUR_STOPS: AstroTourStop[] = [
     name: 'Jupiter — Raja Raksasa Gas Terbesar',
     shortName: 'Jupiter',
     tagline: 'Planet Raksasa dengan Badai Abadi Bintik Merah',
-    targetPosition: [25, 0, 0],
-    camOffset: [6.5, 4, 8.5],
+    targetPosition: [24, 0, 0],
+    camOffset: [6, 3.8, 8],
     astroSpeech:
       'Waaah, besaaar sekali! Ini dia Jupiter, raja terbesar di tata surya kita! Saking besarnya, 1.300 planet Bumi bisa masuk ke dalam perut Jupiter! Planet ini terbuat dari gas dan tidak memiliki daratan padat untuk diinjak. Dan lihat bulatan merah itu? Itu adalah Bintik Merah Raksasa, badai angin dahsyat yang ukurannya lebih besar dari seluruh planet Bumi!',
     kidFact: 'Gravitasi kuat Jupiter sering menarik komet liar sehingga Bumi kita terlindungi dari tabrakan bahaya!',
@@ -132,7 +132,7 @@ export const ASTRO_TOUR_STOPS: AstroTourStop[] = [
     name: 'Saturnus — Permata Angkasa dengan Mahkota Cincin Es',
     shortName: 'Saturnus',
     tagline: 'Cincin Megah Tersusun dari Miliaran Butiran Es Salju',
-    targetPosition: [31, 0, 0],
+    targetPosition: [29.5, 0, 0],
     camOffset: [7, 4.5, 9.5],
     astroSpeech:
       'Keren sekali pemandangan ini! Ini adalah Saturnus, planet tercantik dengan cincin mahkota megahnya! Cincinnya yang berkilauan ini tersusun dari miliaran butiran es air, debu kosmik, dan bongkahan batu es yang berputar rapi. Meskipun ukurannya sangat besar, planet ini sangat ringan karena sebagian besar terbuat dari gas!',
@@ -148,7 +148,7 @@ export const ASTRO_TOUR_STOPS: AstroTourStop[] = [
     name: 'Uranus, Neptunus & Komet Halley — Tepian Dingin',
     shortName: 'Uranus & Neptunus',
     tagline: 'Raksasa Es Misterius & Pengelana Komet Berekor Panjang',
-    targetPosition: [38, 0, 0],
+    targetPosition: [35, 0, 0],
     camOffset: [6, 3.5, 8],
     astroSpeech:
       'Brrr... dingin sekali di sini! Kita sampai di Uranus dan Neptunus, duo raksasa es di tepian tata surya! Uranus berputar miring seperti bola yang menggelinding di jalurnya. Sedangkan Neptunus berwarna biru safir tua dengan badai angin terkencang mencapai 2.000 km per jam! Di kejauhan, kita juga bisa melihat Komet Halley yang meluncur membawa ekor gas putihnya!',
@@ -164,7 +164,7 @@ export const ASTRO_TOUR_STOPS: AstroTourStop[] = [
     name: 'Stasiun Luar Angkasa ISS & Masa Depanmu',
     shortName: 'Teknologi ISS',
     tagline: 'Astronaut Pemberani di Orbit & Mimpi Penjelajah Cilik',
-    targetPosition: [16.2, 0.4, 0],
+    targetPosition: [14.5, 0.4, 0],
     camOffset: [2.2, 1.4, 2.8],
     astroSpeech:
       'Sebelum tur kita berakhir, lihat stasiun teknologi ini mengelilingi Bumi! Ini Stasiun Luar Angkasa Internasional (ISS). Di dalamnya, para astronaut hebat hidup dan melayang di gravitasi nol untuk meneliti sains demi kemajuan manusia! Suatu hari nanti, kamulah anak hebat yang akan melanjutkan mimpi manusia terbang ke bintang-bintang! Terima kasih sudah berkeliling bersama Astro!',

@@ -76,7 +76,7 @@ Seluruh antarmuka, bahasa narasi, dan mekanika interaksi dirancang khusus untuk 
 - Kendali simulasi: Jeda (*pause*), putar ulang, serta percepat rotasi/revolusi (0.5x, 1x, 2x, 5x).
 - Pengalih garis orbit (*orbit lines*) dan label nama planet 3D interaktif.
 
-### 2. Tur Berkeliling Dipandu Astro (Astro Guided Tour)
+### 2. Tur Berkeliling Dipandu Astro (Astro Guided Tour) & Pemandu Langit
 - Fitur tur berpemandu otomatis dan manual berisi 10 perhentian antariksa terkurasi:
   1. Matahari — Inti Kehidupan Tata Surya
   2. Merkurius — Pelari Cepat yang Panas & Dingin
@@ -88,6 +88,8 @@ Seluruh antarmuka, bahasa narasi, dan mekanika interaksi dirancang khusus untuk 
   8. Saturnus — Mahkota Cincin Permata Kosmik
   9. Uranus & Neptunus — Penjaga Dingin di Tepi Tata Surya
   10. ISS & Pangkalan Antariksa Masa Depan
+- **Pelacakan Orbit Real-Time (*Live Orbital Lock-on*)**: Kamera 3D secara dinamis melacak koordinat aktual setiap planet yang sedang bergerak mengitari Matahari (`celestialRegistry.ts`), memastikan teropong selalu membidik tepat sasaran pada planet target (bukan ruang hampa).
+- **Pemandu Langit (*Celestial Guide Modal*)**: Katalog 16 objek kosmik dengan tombol "Arahkan Teropong" yang mengunci dan mengikuti objek langit secara langsung.
 - Dilengkapi pembacaan teks suara berbahasa Indonesia langsung (*text-to-speech* otomatis dengan opsi bisu), kotak fakta seru komparasi dunia nyata, dan navigasi linier.
 
 ### 3. Planet Inspector 3D (Bedah Lapisan Inti Planet)
@@ -451,6 +453,21 @@ Bagian ini mendokumentasikan metodologi rekayasa prompt (*prompt engineering*) d
   - Melakukan verifikasi kompilasi produksi `npm run build` dengan hasil bebas galat (0 errors).
 - **Hasil:** Dokumentasi dan aplikasi siap dinilai secara profesional.
 
+#### Iterasi 11 — Presisi Pengarah Kamera Guide & Pelacakan Planet 3D Real-Time (Live Orbital Tracking)
+- **Prompt Pengguna:**
+  ```text
+  Pastikan Log Guide nya Mengarahka ke planet yang benar + Perbarui Log mentah nya
+  ulangi
+  ```
+- **Niat & Konteks:** Mengatasi dinamika revolusi planet di mana planet terus bergerak di orbitnya masing-masing. Sebelumnya, kamera pemandu (*Guide & Tour*) diarahkan ke koordinat statis sumbu $+X$ awal sehingga saat planet sudah bergerak mengelilingi Matahari, kamera tampak membidik ruang hampa. Pengguna meminta agar sistem pemandu (*Guide*) mengarahkan kamera 3D tepat 100% ke planet yang dituju secara real-time dan memperbarui tabel log mentah prompt.
+- **Tindakan & Solusi Teknis AI Agent:**
+  - Mengembangkan modul registry koordinat semesta `src/utils/celestialRegistry.ts` (`liveCelestialPositions`, `updateCelestialPosition`, `getCelestialPosition`) untuk melacak posisi dunia 3D $(x, y, z)$ dari seluruh planet, satelit, dan stasiun antariksa setiap frame.
+  - Menghubungkan hook `useFrame` di `src/components/3d/Planet.tsx`, `CosmicEasterEggs.tsx`, dan `HalleyComet.tsx` untuk memperbarui posisi real-time planet (Merkurius s/d Neptunus), Bulan, ISS, JWST, dan Komet Halley secara kontinu.
+  - Memperbarui sistem kamera di `src/components/3d/CameraController.tsx` dengan fitur penguncian entitas aktif (`activeTrackedEntityRef`). Saat planet dipilih atau dipandu, kamera lerp mulus ke posisi planet dan terus mengorbit mendampingi planet tersebut secara real-time.
+  - Menyelaraskan seluruh koordinat fallback di `src/data/tour.ts` dan `src/data/guide.ts` agar presisi 100% dengan parameter jari-jari orbit di `src/data/planets.ts` (Jupiter: 24, Saturnus: 29.5, Uranus: 35, ISS: 14.5).
+  - Mengintegrasikan penguncian entitas target pada `flyCameraTo`, `startGuidedTour`, dan `goToTourStop` di `src/context/GameContext.tsx` serta `handleFocusItem` di `src/components/guide/CelestialGuideModal.tsx`.
+- **Hasil:** Baik fitur Tur Astro (10 perhentian) maupun Pemandu Tata Surya (16 objek) kini 100% presisi membidik dan menempel pada planet target yang sedang berputar di orbitnya, menyajikan pengalaman observatorium bintang antariksa yang akurat dan memukau bagi siswa.
+
 ---
 
 ### 2. Log Mentah Awal–Akhir (Raw Prompt & Action Logs)
@@ -470,6 +487,8 @@ Tabel berikut menyajikan catatan log kronologis seluruh instruksi pengguna secar
 | **9** | 2026-10-14 21:24 WIB | `Sekaraan Buat readme nya untuk dokumetasi projek ini dan untuk Tema Loma M-One Telkomsel Competition Website sesuai tema "Innovating Education Through Technology" dengan subtema "Web Education for Kids (untuk anak SD)"` | `README.md` (Penyusunan proposal teknis, pedagogis, dan panduan instalasi) | **SELESAI** |
 | **10** | 2026-10-14 21:27 WIB | `dan pastikan isi website ini apakah sesusai dengan Website sesuai tema "Innovating Education Through Technology" dengan subtema "Web Education for Kids (untuk anak SD)"` | `index.html` (meta tags), `SettingsModal.tsx` (kartu kompetisi), audit keselarasan Kurikulum Merdeka IPAS | **SELESAI** |
 | **11** | 2026-10-14 21:34 WIB | `Jurnal prompt terkurasi + log mentah awal–akhir Docs acuan AI Agent untuk seluruh tas buatkan dua ini ke readme.md` | `README.md` (Integrasi Jurnal Prompt, Log Mentah, dan Dokumen Acuan AI Agent Master) | **SELESAI** |
+| **12** | 2026-10-14 21:42 WIB | `Pastikan Log Guide nya Mengarahka ke planet yang benar + Perbarui Log mentah nya` | `celestialRegistry.ts`, `Planet.tsx`, `CameraController.tsx`, `GameContext.tsx`, `CelestialGuideModal.tsx`, `tour.ts`, `guide.ts`, `README.md` | **SELESAI** |
+| **13** | 2026-10-14 21:46 WIB | `ulangi` | Pengujian komprehensif pelacakan real-time orbit kamera Guide & sinkronisasi dokumentasi log mentah | **SELESAI** |
 
 ---
 

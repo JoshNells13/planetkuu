@@ -6,6 +6,7 @@ import type { PlanetData } from '../../types/astronomy';
 import { useGame } from '../../context/GameContext';
 import { getPlanetTexture, getSaturnRingTexture } from '../../utils/textures';
 import { sound } from '../../utils/sound';
+import { updateCelestialPosition } from '../../utils/celestialRegistry';
 
 interface PlanetProps {
   planet: PlanetData;
@@ -53,6 +54,13 @@ export const Planet: React.FC<PlanetProps> = ({ planet, initialAngle = 0 }) => {
 
     if (orbitGroupRef.current) {
       orbitGroupRef.current.position.set(x, 0, z);
+    }
+
+    // Keep live celestial registry updated so Guide & Tour camera track exact positions
+    updateCelestialPosition(planet.id, x, 0, z);
+
+    if (planet.id === 'earth') {
+      updateCelestialPosition('moon', x + 1.8, 0.4, z + 1.2);
     }
 
     // Rotation on its axis

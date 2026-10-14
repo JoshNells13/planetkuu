@@ -4,6 +4,7 @@ import { useGame } from '../../context/GameContext';
 import { CELESTIAL_GUIDE_ITEMS, type GuideItem } from '../../data/guide';
 import { PLANETS_DATA } from '../../data/planets';
 import { sound } from '../../utils/sound';
+import { getCelestialPosition } from '../../utils/celestialRegistry';
 
 export const CelestialGuideModal: React.FC = () => {
   const {
@@ -27,11 +28,42 @@ export const CelestialGuideModal: React.FC = () => {
   const handleFocusItem = (item: GuideItem) => {
     sound.playTourStep();
 
-    // Fly camera directly to target
-    flyCameraTo(item.targetPosition, item.camOffset);
+    const entityId =
+      item.relatedPlanetId ||
+      (item.id === 'guide-sun'
+        ? 'sun'
+        : item.id === 'guide-iss'
+        ? 'iss'
+        : item.id === 'guide-moon'
+        ? 'moon'
+        : item.id === 'guide-comet'
+        ? 'comet'
+        : item.id === 'guide-jwst'
+        ? 'jwst'
+        : item.id === 'guide-voyager'
+        ? 'voyager'
+        : item.id === 'guide-pluto'
+        ? 'pluto'
+        : item.id === 'guide-asteroids'
+        ? 'asteroids'
+        : undefined);
+
+    const livePos = (entityId ? getCelestialPosition(entityId) : null) || {
+      x: item.targetPosition[0],
+      y: item.targetPosition[1],
+      z: item.targetPosition[2],
+    };
+
+    // Fly camera directly to target with live tracking lock
+    flyCameraTo([livePos.x, livePos.y, livePos.z], item.camOffset, entityId);
 
     // Contextual Astro voice
-    showAstroMessage(`Mengarahkan teropong ke ${item.name}! ${item.quickFact}`, 'explaining');
+    if (item.relatedPlanetId) {
+      const planet = PLANETS_DATA.find((p) => p.id === item.relatedPlanetId);
+      showAstroMessage(`Mengarahkan teropong ke ${planet ? planet.indonesianName : item.name}! ${item.quickFact}`, 'explaining');
+    } else {
+      showAstroMessage(`Mengarahkan teropong ke ${item.name}! ${item.quickFact}`, 'explaining');
+    }
     closePanel();
   };
 
