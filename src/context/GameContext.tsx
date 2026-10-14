@@ -8,6 +8,7 @@ import { ASTRO_TOUR_STOPS } from '../data/tour';
 import { loadUserProgress, saveUserProgress, calculateLevel, calculateRankTitle } from '../utils/storage';
 import { sound } from '../utils/sound';
 import { astroVoice } from '../utils/speech';
+import { cosmicBGM } from '../utils/bgm';
 
 export type ActivePanel =
   | 'none'
@@ -65,6 +66,8 @@ interface GameContextType {
 
   triggerConfetti: () => void;
   toggleSound: () => void;
+  toggleMusic: () => void;
+  isMusicPlaying: boolean;
   toggleOrbitLines: () => void;
   toggleLabels: () => void;
   setGraphicsQuality: (quality: 'high' | 'medium' | 'low') => void;
@@ -104,9 +107,16 @@ export const GameProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     visible: true,
   });
 
+  const [isMusicPlaying, setIsMusicPlaying] = useState<boolean>(false);
+
   useEffect(() => {
     sound.setEnabled(userProgress.settings.soundEnabled);
   }, [userProgress.settings.soundEnabled]);
+
+  useEffect(() => {
+    cosmicBGM.setEnabled(userProgress.settings.musicEnabled);
+    setIsMusicPlaying(userProgress.settings.musicEnabled);
+  }, [userProgress.settings.musicEnabled]);
 
   useEffect(() => {
     saveUserProgress(userProgress);
@@ -131,7 +141,11 @@ export const GameProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
       mood,
       visible: true,
     });
-    sound.playAstroBlip();
+    if (mood === 'celebrating') {
+      sound.playAstroHappy();
+    } else {
+      sound.playAstroBlip();
+    }
   }, []);
 
   const dismissAstroMessage = useCallback(() => {
@@ -151,8 +165,11 @@ export const GameProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
           sound.playSuccess();
           triggerConfetti();
         }, 500);
-      } else if (reason) {
-        showAstroMessage(`+${amount} XP: ${reason}! Hebat!`, 'celebrating');
+      } else {
+        sound.playXpGain();
+        if (reason) {
+          showAstroMessage(`+${amount} XP: ${reason}! Hebat!`, 'celebrating');
+        }
       }
 
       return {
@@ -273,20 +290,20 @@ export const GameProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   }, []);
 
   const openPanel = useCallback((panel: ActivePanel) => {
-    sound.playClick();
+    sound.playModalOpen();
     setIsTourActive(false);
     astroVoice.stop();
     setActivePanel(panel);
   }, []);
 
   const closePanel = useCallback(() => {
-    sound.playClick();
+    sound.playModalClose();
     setActivePanel('none');
   }, []);
 
   // Guided Tour Actions
   const startGuidedTour = useCallback(() => {
-    sound.playPlanetSelect();
+    sound.playTourStep();
     setActivePanel('none');
     setSelectedPlanet(null);
     setIsTourActive(true);
@@ -309,7 +326,7 @@ export const GameProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   }, [addXP, showAstroMessage]);
 
   const stopGuidedTour = useCallback(() => {
-    sound.playClick();
+    sound.playModalClose();
     setIsTourActive(false);
     setIsTourAutoplay(false);
     astroVoice.stop();
@@ -318,7 +335,7 @@ export const GameProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
 
   const goToTourStop = useCallback((index: number) => {
     if (index < 0 || index >= ASTRO_TOUR_STOPS.length) return;
-    sound.playPlanetSelect();
+    sound.playTourStep();
     setTourStepIndex(index);
     const stop = ASTRO_TOUR_STOPS[index];
     setCameraTarget({
@@ -368,10 +385,15 @@ export const GameProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     });
   }, [showAstroMessage]);
 
+  const handleSetSimulationSpeed = useCallback((speed: number) => {
+    sound.playSpeedChange(speed);
+    setSimulationSpeed(speed);
+  }, []);
+
   const togglePause = useCallback(() => {
-    sound.playClick();
     setIsPaused((prev) => {
       const next = !prev;
+      sound.playToggle(!next);
       showAstroMessage(next ? 'Simulasi dihentikan sejenak (Pause).' : 'Simulasi kembali berputar!', 'thinking');
       return next;
     });
@@ -389,10 +411,23 @@ export const GameProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     });
   }, []);
 
-  const toggleOrbitLines = useCallback(() => {
+  const toggleMusic = useCallback(() => {
     sound.playClick();
     setUserProgress((prev) => {
+      const nextVal = !prev.settings.musicEnabled;
+      cosmicBGM.setEnabled(nextVal);
+      setIsMusicPlaying(nextVal);
+      return {
+        ...prev,
+        settings: { ...prev.settings, musicEnabled: nextVal },
+      };
+    });
+  }, []);
+
+  const toggleOrbitLines = useCallback(() => {
+    setUserProgress((prev) => {
       const nextVal = !prev.settings.orbitLinesVisible;
+      sound.playToggle(nextVal);
       showAstroMessage(nextVal ? 'Garis orbit ditampilkan.' : 'Garis orbit disembunyikan.', 'thinking');
       return {
         ...prev,
@@ -402,11 +437,14 @@ export const GameProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   }, [showAstroMessage]);
 
   const toggleLabels = useCallback(() => {
-    sound.playClick();
-    setUserProgress((prev) => ({
-      ...prev,
-      settings: { ...prev.settings, labelsVisible: !prev.settings.labelsVisible },
-    }));
+    setUserProgress((prev) => {
+      const nextVal = !prev.settings.labelsVisible;
+      sound.playToggle(nextVal);
+      return {
+        ...prev,
+        settings: { ...prev.settings, labelsVisible: nextVal },
+      };
+    });
   }, []);
 
   const setGraphicsQuality = useCallback((quality: 'high' | 'medium' | 'low') => {
@@ -434,7 +472,7 @@ export const GameProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         cameraTarget,
         flyCameraTo,
         simulationSpeed,
-        setSimulationSpeed,
+        setSimulationSpeed: handleSetSimulationSpeed,
         isPaused,
         togglePause,
         activePanel,
@@ -450,6 +488,8 @@ export const GameProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         dismissAstroMessage,
         triggerConfetti,
         toggleSound,
+        toggleMusic,
+        isMusicPlaying,
         toggleOrbitLines,
         toggleLabels,
         setGraphicsQuality,

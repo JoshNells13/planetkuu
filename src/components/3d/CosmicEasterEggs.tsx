@@ -102,7 +102,7 @@ export const CosmicEasterEggs: React.FC = () => {
 
   const handleCatchMeteor = (e: { stopPropagation: () => void }) => {
     e.stopPropagation();
-    sound.playSuccess();
+    sound.playEasterEgg();
     triggerConfetti();
     addXP(40, 'Menangkap Meteor Jatuh!');
     unlockBadge('badge-meteor-hunter');
@@ -113,14 +113,14 @@ export const CosmicEasterEggs: React.FC = () => {
 
   const handleOpenISS = (e: { stopPropagation: () => void }) => {
     e.stopPropagation();
-    sound.playClick();
+    sound.playTelemetry();
     openPanel('iss-details');
     showAstroMessage('Ini Stasiun Luar Angkasa Internasional (ISS)! Tempat para astronaut tinggal dan bekerja di luar bumi.', 'explaining');
   };
 
   const handleOpenJWST = (e: { stopPropagation: () => void }) => {
     e.stopPropagation();
-    sound.playClick();
+    sound.playTelescopeScan();
     openPanel('jwst-details');
     showAstroMessage('Teleskop Antariksa James Webb (JWST)! Cermin emasnya mengintip cahaya bintang paling awal di alam semesta.', 'explaining');
   };

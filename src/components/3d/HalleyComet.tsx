@@ -44,7 +44,7 @@ export const HalleyComet: React.FC = () => {
 
   const handleClick = (e: { stopPropagation: () => void }) => {
     e.stopPropagation();
-    sound.playSuccess();
+    sound.playCometWhoosh();
     triggerConfetti();
     addXP(30, 'Mengamati Komet Halley');
     showAstroMessage(

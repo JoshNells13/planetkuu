@@ -234,7 +234,7 @@ export const PlanetInspector3D: React.FC<{ planet: PlanetData }> = ({ planet }) 
       >
         <button
           onClick={() => {
-            sound.playClick();
+            sound.playTabSwitch();
             setViewMode('surface');
             setSelectedHotspot(null);
           }}
@@ -257,7 +257,7 @@ export const PlanetInspector3D: React.FC<{ planet: PlanetData }> = ({ planet }) 
 
         <button
           onClick={() => {
-            sound.playClick();
+            sound.playTabSwitch();
             setViewMode('internal');
             setSelectedHotspot(null);
           }}

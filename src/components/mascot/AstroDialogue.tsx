@@ -1,12 +1,23 @@
 import React from 'react';
-import { X, MessageSquare, Sparkles } from 'lucide-react';
+import { X, MessageSquare, Sparkles, Compass } from 'lucide-react';
 import { AstroMascot } from './AstroMascot';
 import { useGame } from '../../context/GameContext';
+import { sound } from '../../utils/sound';
 
 export const AstroDialogue: React.FC = () => {
-  const { astroDialogue, dismissAstroMessage, showAstroMessage, openPanel } = useGame();
+  const { astroDialogue, dismissAstroMessage, showAstroMessage, openPanel, startGuidedTour } = useGame();
+  const [isMobile, setIsMobile] = React.useState<boolean>(
+    typeof window !== 'undefined' ? window.innerWidth <= 768 : false
+  );
+
+  React.useEffect(() => {
+    const handleResize = () => setIsMobile(window.innerWidth <= 768);
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
 
   const handleMascotClick = () => {
+    sound.playAstroBlip();
     if (!astroDialogue.visible) {
       showAstroMessage('Halo lagi! Ada yang ingin kamu tanyakan tentang tata surya? Coba pilih planet atau buka Misi!', 'waving');
     } else {
@@ -15,24 +26,12 @@ export const AstroDialogue: React.FC = () => {
   };
 
   return (
-    <div
-      style={{
-        position: 'fixed',
-        bottom: '24px',
-        left: '24px',
-        zIndex: 40,
-        display: 'flex',
-        alignItems: 'flex-end',
-        gap: '16px',
-        pointerEvents: 'none',
-        maxWidth: 'calc(100vw - 48px)',
-      }}
-    >
+    <div className="astro-dialogue-container">
       {/* Clickable Mascot Figure */}
       <div style={{ pointerEvents: 'auto', flexShrink: 0 }}>
         <AstroMascot
           mood={astroDialogue.mood}
-          size={100}
+          size={isMobile ? 70 : 96}
           isFloating
           onClick={handleMascotClick}
         />
@@ -44,10 +43,10 @@ export const AstroDialogue: React.FC = () => {
           className="glass-panel-glow"
           style={{
             pointerEvents: 'auto',
-            padding: '16px 20px',
+            padding: isMobile ? '12px 14px' : '16px 20px',
             borderRadius: '20px',
             borderBottomLeftRadius: '4px',
-            maxWidth: '380px',
+            maxWidth: isMobile ? 'calc(100vw - 110px)' : '380px',
             animation: 'floatBob 4s ease-in-out infinite',
             position: 'relative',
           }}
@@ -118,16 +117,41 @@ export const AstroDialogue: React.FC = () => {
               marginTop: '12px',
               display: 'flex',
               alignItems: 'center',
-              justifyContent: 'flex-end',
+              justifyContent: 'space-between',
               gap: '8px',
             }}
           >
             <button
+              onClick={() => {
+                dismissAstroMessage();
+                startGuidedTour();
+              }}
+              style={{
+                background: 'linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%)',
+                border: 'none',
+                color: '#000000',
+                fontFamily: 'var(--font-display)',
+                fontSize: '12px',
+                fontWeight: 800,
+                cursor: 'pointer',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '5px',
+                padding: '6px 12px',
+                borderRadius: '8px',
+                boxShadow: '0 2px 8px rgba(251, 191, 36, 0.3)',
+              }}
+            >
+              <Compass size={13} />
+              <span>Ajak Berkeliling!</span>
+            </button>
+
+            <button
               onClick={() => openPanel('astro-talk')}
               style={{
-                background: 'transparent',
-                border: 'none',
-                color: '#fbbf24',
+                background: 'rgba(255, 255, 255, 0.06)',
+                border: '1px solid rgba(255, 255, 255, 0.12)',
+                color: '#e2e8f0',
                 fontFamily: 'var(--font-display)',
                 fontSize: '12px',
                 fontWeight: 600,
@@ -135,7 +159,7 @@ export const AstroDialogue: React.FC = () => {
                 display: 'flex',
                 alignItems: 'center',
                 gap: '4px',
-                padding: '4px 8px',
+                padding: '5px 10px',
                 borderRadius: '8px',
               }}
             >

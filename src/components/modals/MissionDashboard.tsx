@@ -68,6 +68,7 @@ export const MissionDashboard: React.FC = () => {
 
   return (
     <div
+      className="modal-backdrop-mobile"
       style={{
         position: 'fixed',
         inset: 0,
@@ -84,7 +85,7 @@ export const MissionDashboard: React.FC = () => {
       }}
     >
       <div
-        className="glass-panel-glow"
+        className="glass-panel-glow modal-container-mobile"
         style={{
           width: '100%',
           maxWidth: '750px',

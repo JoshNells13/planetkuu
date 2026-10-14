@@ -63,7 +63,7 @@ export const Pluto: React.FC = () => {
 
   const handleClick = (e: { stopPropagation: () => void }) => {
     e.stopPropagation();
-    sound.playSuccess();
+    sound.playPlutoChime();
     triggerConfetti();
     addXP(30, 'Menemukan Planet Kerdil Pluto');
     unlockBadge('badge-meteor-hunter');

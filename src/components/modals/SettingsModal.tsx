@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { X, Settings, Volume2, VolumeX, Eye, Monitor } from 'lucide-react';
+import { X, Settings, Volume2, VolumeX, Eye, Monitor, Music } from 'lucide-react';
 import { useGame } from '../../context/GameContext';
 
 export const SettingsModal: React.FC = () => {
@@ -7,6 +7,7 @@ export const SettingsModal: React.FC = () => {
     closePanel,
     userProgress,
     toggleSound,
+    toggleMusic,
     toggleOrbitLines,
     toggleLabels,
     setGraphicsQuality,
@@ -112,6 +113,48 @@ export const SettingsModal: React.FC = () => {
 
         {/* Settings Body */}
         <div style={{ padding: '24px', display: 'flex', flexDirection: 'column', gap: '18px' }}>
+          {/* Background Music (BGM) Toggle */}
+          <div
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+              padding: '12px 16px',
+              borderRadius: '14px',
+              backgroundColor: 'rgba(255, 255, 255, 0.03)',
+              border: userProgress.settings.musicEnabled ? '1px solid rgba(251, 191, 36, 0.25)' : '1px solid transparent',
+            }}
+          >
+            <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+              <div
+                style={{
+                  width: '36px',
+                  height: '36px',
+                  borderRadius: '10px',
+                  backgroundColor: userProgress.settings.musicEnabled ? 'rgba(251, 191, 36, 0.15)' : 'rgba(255, 255, 255, 0.05)',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  color: userProgress.settings.musicEnabled ? '#fbbf24' : '#94a3b8',
+                }}
+              >
+                <Music size={18} />
+              </div>
+              <div>
+                <div style={{ fontWeight: 700, fontSize: '14px', color: '#f8fafc' }}>Musik Latar Antariksa (BGM)</div>
+                <div style={{ fontSize: '12px', color: '#94a3b8' }}>Alunan musik atmosfer kosmik yang menenangkan</div>
+              </div>
+            </div>
+
+            <button
+              onClick={toggleMusic}
+              className={`cosmic-btn ${userProgress.settings.musicEnabled ? 'cosmic-btn-gold' : 'cosmic-btn-secondary'}`}
+              style={{ padding: '6px 14px', fontSize: '12px', minWidth: '70px' }}
+            >
+              {userProgress.settings.musicEnabled ? 'Aktif' : 'Mati'}
+            </button>
+          </div>
+
           {/* Sound Toggle */}
           <div
             style={{

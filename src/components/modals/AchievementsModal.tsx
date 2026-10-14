@@ -18,9 +18,10 @@ import {
 } from 'lucide-react';
 import { useGame } from '../../context/GameContext';
 import { BADGES_DATA } from '../../data/missions';
+import { sound } from '../../utils/sound';
 
 export const AchievementsModal: React.FC = () => {
-  const { closePanel, userProgress } = useGame();
+  const { closePanel, userProgress, showAstroMessage } = useGame();
 
   const allBadges = Object.values(BADGES_DATA);
   const unlockedCount = userProgress.unlockedBadges.length;
@@ -55,6 +56,7 @@ export const AchievementsModal: React.FC = () => {
 
   return (
     <div
+      className="modal-backdrop-mobile"
       style={{
         position: 'fixed',
         inset: 0,
@@ -71,7 +73,7 @@ export const AchievementsModal: React.FC = () => {
       }}
     >
       <div
-        className="glass-panel-glow"
+        className="glass-panel-glow modal-container-mobile"
         style={{
           width: '100%',
           maxWidth: '720px',
@@ -229,6 +231,17 @@ export const AchievementsModal: React.FC = () => {
             return (
               <div
                 key={badge.id}
+                role="button"
+                tabIndex={0}
+                onClick={() => {
+                  if (isUnlocked) {
+                    sound.playEasterEgg();
+                    showAstroMessage(`Lencana ${badge.name}! ${badge.description}`, 'celebrating');
+                  } else {
+                    sound.playQuizWrong();
+                    showAstroMessage(`Lencana "${badge.name}" masih terkunci. ${badge.description}`, 'hint');
+                  }
+                }}
                 style={{
                   padding: '18px 16px',
                   borderRadius: '18px',
@@ -241,6 +254,7 @@ export const AchievementsModal: React.FC = () => {
                   textAlign: 'center',
                   position: 'relative',
                   opacity: isUnlocked ? 1 : 0.6,
+                  cursor: 'pointer',
                 }}
               >
                 {/* Badge Icon Circle */}

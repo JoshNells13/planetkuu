@@ -17,6 +17,7 @@ export const EncyclopediaModal: React.FC = () => {
 
   return (
     <div
+      className="modal-backdrop-mobile"
       style={{
         position: 'fixed',
         inset: 0,
@@ -25,7 +26,7 @@ export const EncyclopediaModal: React.FC = () => {
         alignItems: 'center',
         justifyContent: 'center',
         padding: '20px',
-        backgroundColor: 'rgba(3, 7, 18, 0.85)',
+        backgroundColor: 'rgba(0, 0, 0, 0.88)',
         backdropFilter: 'blur(16px)',
       }}
       onClick={(e) => {
@@ -33,7 +34,7 @@ export const EncyclopediaModal: React.FC = () => {
       }}
     >
       <div
-        className="glass-panel-glow"
+        className="glass-panel-glow modal-container-mobile"
         style={{
           width: '100%',
           maxWidth: '820px',
@@ -120,7 +121,7 @@ export const EncyclopediaModal: React.FC = () => {
           }}
         >
           <button
-            onClick={() => { sound.playClick(); setMode('catalog'); }}
+            onClick={() => { sound.playTabSwitch(); setMode('catalog'); }}
             style={{
               padding: '7px 16px',
               borderRadius: '999px',
@@ -141,7 +142,7 @@ export const EncyclopediaModal: React.FC = () => {
           </button>
 
           <button
-            onClick={() => { sound.playClick(); setMode('compare'); }}
+            onClick={() => { sound.playTabSwitch(); setMode('compare'); }}
             style={{
               padding: '7px 16px',
               borderRadius: '999px',
@@ -173,7 +174,7 @@ export const EncyclopediaModal: React.FC = () => {
                   return (
                     <button
                       key={p.id}
-                      onClick={() => { sound.playClick(); setSelectedItem(p); }}
+                      onClick={() => { sound.playPlanetSelect(); setSelectedItem(p); }}
                       style={{
                         padding: '10px 14px',
                         borderRadius: '12px',

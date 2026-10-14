@@ -13,7 +13,7 @@ export const LunarEasterEggModal: React.FC = () => {
   const isBadgeUnlocked = userProgress.unlockedBadges.includes('badge-moon-detective');
 
   const handleInspect = (item: 'footprints' | 'plaque' | 'eagle') => {
-    sound.playClick();
+    sound.playTelemetry();
     if (item === 'footprints') setInspectedFootprints(true);
     if (item === 'plaque') setInspectedPlaque(true);
     if (item === 'eagle') setInspectedEagle(true);

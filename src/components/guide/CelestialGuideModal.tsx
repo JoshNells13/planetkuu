@@ -25,7 +25,7 @@ export const CelestialGuideModal: React.FC = () => {
   });
 
   const handleFocusItem = (item: GuideItem) => {
-    sound.playClick();
+    sound.playTourStep();
 
     // Fly camera directly to target
     flyCameraTo(item.targetPosition, item.camOffset);
@@ -178,7 +178,7 @@ export const CelestialGuideModal: React.FC = () => {
             <button
               key={tab.id}
               onClick={() => {
-                sound.playClick();
+                sound.playTabSwitch();
                 setFilter(tab.id as typeof filter);
               }}
               style={{

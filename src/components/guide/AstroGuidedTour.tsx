@@ -32,6 +32,15 @@ export const AstroGuidedTour: React.FC = () => {
 
   const [voiceEnabled, setVoiceEnabled] = useState<boolean>(true);
   const [autoplayProgress, setAutoplayProgress] = useState<number>(0);
+  const [isMobile, setIsMobile] = useState<boolean>(
+    typeof window !== 'undefined' ? window.innerWidth <= 768 : false
+  );
+
+  useEffect(() => {
+    const handleResize = () => setIsMobile(window.innerWidth <= 768);
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
 
   const currentStop = ASTRO_TOUR_STOPS[tourStepIndex] || ASTRO_TOUR_STOPS[0];
   const isFirst = tourStepIndex === 0;
@@ -112,26 +121,28 @@ export const AstroGuidedTour: React.FC = () => {
       <div
         style={{
           position: 'absolute',
-          top: '76px',
+          top: isMobile ? '66px' : '76px',
           left: '50%',
           transform: 'translateX(-50%)',
           pointerEvents: 'auto',
           display: 'flex',
           alignItems: 'center',
-          gap: '12px',
-          padding: '8px 20px',
+          gap: isMobile ? '8px' : '12px',
+          padding: isMobile ? '6px 14px' : '8px 20px',
           borderRadius: '999px',
           backgroundColor: 'rgba(10, 11, 15, 0.95)',
           border: '1.5px solid rgba(251, 191, 36, 0.4)',
           boxShadow: '0 12px 35px rgba(0, 0, 0, 0.9), 0 0 25px rgba(251, 191, 36, 0.15)',
           backdropFilter: 'blur(16px)',
           animation: 'floatBob 4s ease-in-out infinite',
+          maxWidth: 'calc(100vw - 20px)',
+          whiteSpace: 'nowrap',
         }}
       >
         <div
           style={{
-            width: '28px',
-            height: '28px',
+            width: isMobile ? '24px' : '28px',
+            height: isMobile ? '24px' : '28px',
             borderRadius: '50%',
             backgroundColor: 'rgba(251, 191, 36, 0.2)',
             display: 'flex',
@@ -140,21 +151,21 @@ export const AstroGuidedTour: React.FC = () => {
             color: '#fbbf24',
           }}
         >
-          <Compass size={16} />
+          <Compass size={isMobile ? 14 : 16} />
         </div>
 
-        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
           <span
             style={{
               fontFamily: 'var(--font-display)',
-              fontSize: '13px',
+              fontSize: isMobile ? '12px' : '13px',
               fontWeight: 800,
               color: '#fbbf24',
               textTransform: 'uppercase',
               letterSpacing: '0.8px',
             }}
           >
-            Tur Keliling Antariksa bersama Astro
+            {isMobile ? 'Tur Astro' : 'Tur Keliling Antariksa bersama Astro'}
           </span>
           <span
             style={{
@@ -162,11 +173,11 @@ export const AstroGuidedTour: React.FC = () => {
               borderRadius: '999px',
               backgroundColor: 'rgba(255, 255, 255, 0.1)',
               color: '#ffffff',
-              fontSize: '11px',
+              fontSize: isMobile ? '10.5px' : '11px',
               fontWeight: 700,
             }}
           >
-            Pemberhentian {currentStop.stepNumber} dari {currentStop.totalSteps}
+            {currentStop.stepNumber}/{currentStop.totalSteps}
           </span>
         </div>
 
@@ -197,8 +208,9 @@ export const AstroGuidedTour: React.FC = () => {
           pointerEvents: 'auto',
           width: '100%',
           maxWidth: '860px',
+          maxHeight: isMobile ? '75vh' : 'auto',
           margin: '0 auto',
-          borderRadius: '24px',
+          borderRadius: isMobile ? '20px' : '24px',
           backgroundColor: '#0a0b0e',
           border: '1.5px solid rgba(251, 191, 36, 0.35)',
           boxShadow: '0 25px 60px rgba(0, 0, 0, 0.98), 0 0 40px rgba(251, 191, 36, 0.12)',
@@ -231,11 +243,13 @@ export const AstroGuidedTour: React.FC = () => {
         {/* Card Content Row */}
         <div
           style={{
-            padding: '20px 24px',
+            padding: isMobile ? '12px 14px' : '20px 24px',
             display: 'flex',
             alignItems: 'flex-start',
-            gap: '20px',
+            gap: isMobile ? '12px' : '20px',
             flexWrap: 'wrap',
+            overflowY: 'auto',
+            maxHeight: isMobile ? 'calc(75vh - 110px)' : 'none',
           }}
         >
           {/* Animated Mascot Figure */}
@@ -249,7 +263,7 @@ export const AstroGuidedTour: React.FC = () => {
           >
             <AstroMascot
               mood={currentStop.astroMood}
-              size={90}
+              size={isMobile ? 64 : 90}
               isFloating
               onClick={handleReplayVoice}
             />
@@ -401,25 +415,25 @@ export const AstroGuidedTour: React.FC = () => {
         {/* Bottom Tour Navigation Controller */}
         <div
           style={{
-            padding: '12px 24px',
-            backgroundColor: 'rgba(14, 15, 20, 0.95)',
+            padding: isMobile ? '10px 14px' : '12px 24px',
+            backgroundColor: 'rgba(14, 15, 20, 0.98)',
             borderTop: '1px solid rgba(255, 255, 255, 0.08)',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'space-between',
             flexWrap: 'wrap',
-            gap: '12px',
+            gap: isMobile ? '10px' : '12px',
           }}
         >
           {/* Step Timeline Indicator */}
-          <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: isMobile ? '4px' : '6px' }}>
             {ASTRO_TOUR_STOPS.map((stop, idx) => (
               <button
                 key={stop.id}
                 onClick={() => goToTourStop(idx)}
                 style={{
-                  width: idx === tourStepIndex ? '28px' : '10px',
-                  height: '10px',
+                  width: idx === tourStepIndex ? (isMobile ? '20px' : '28px') : (isMobile ? '7px' : '10px'),
+                  height: isMobile ? '7px' : '10px',
                   borderRadius: '999px',
                   backgroundColor:
                     idx === tourStepIndex
@@ -438,12 +452,63 @@ export const AstroGuidedTour: React.FC = () => {
           </div>
 
           {/* Action Buttons */}
-          <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+          <div
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: isMobile ? '6px' : '8px',
+              flexWrap: 'wrap',
+              width: isMobile ? '100%' : 'auto',
+              justifyContent: isMobile ? 'space-between' : 'flex-end',
+            }}
+          >
+            {/* Previous Stop */}
+            <button
+              onClick={prevTourStop}
+              disabled={isFirst}
+              style={{
+                minHeight: '44px',
+                padding: isMobile ? '8px 12px' : '7px 14px',
+                borderRadius: '999px',
+                backgroundColor: 'rgba(255, 255, 255, 0.06)',
+                border: '1px solid rgba(255, 255, 255, 0.12)',
+                color: isFirst ? '#475569' : '#e2e8f0',
+                fontSize: isMobile ? '12px' : '12.5px',
+                fontWeight: 700,
+                cursor: isFirst ? 'not-allowed' : 'pointer',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '6px',
+                opacity: isFirst ? 0.4 : 1,
+              }}
+            >
+              <ArrowLeft size={14} />
+              <span>Sebelumnya</span>
+            </button>
+
+            {/* Next Stop or Finish (Primary CTA) */}
+            <button
+              onClick={nextTourStop}
+              className="cosmic-btn cosmic-btn-gold"
+              style={{
+                minHeight: '44px',
+                padding: isMobile ? '8px 16px' : '8px 20px',
+                fontSize: isMobile ? '13px' : '13.5px',
+                fontWeight: 800,
+                flex: isMobile ? '1' : 'initial',
+                justifyContent: 'center',
+              }}
+            >
+              <span>{isLast ? 'Selesaikan Tur' : 'Lanjut Berkeliling'}</span>
+              {isLast ? <CheckCircle2 size={16} /> : <ArrowRight size={16} />}
+            </button>
+
             {/* Autoplay Toggle */}
             <button
               onClick={toggleTourAutoplay}
               style={{
-                padding: '7px 14px',
+                minHeight: '44px',
+                padding: isMobile ? '8px 12px' : '7px 14px',
                 borderRadius: '999px',
                 backgroundColor: isTourAutoplay ? 'rgba(251, 191, 36, 0.2)' : 'rgba(255, 255, 255, 0.06)',
                 border: isTourAutoplay ? '1px solid rgba(251, 191, 36, 0.4)' : '1px solid rgba(255, 255, 255, 0.12)',
@@ -458,51 +523,15 @@ export const AstroGuidedTour: React.FC = () => {
               title={isTourAutoplay ? 'Hentikan putaran otomatis' : 'Nyalakan tur otomatis (10 detik per planet)'}
             >
               {isTourAutoplay ? <Pause size={14} /> : <Play size={14} />}
-              <span>{isTourAutoplay ? 'Otomatis: Nyala' : 'Tur Otomatis'}</span>
-            </button>
-
-            {/* Previous Stop */}
-            <button
-              onClick={prevTourStop}
-              disabled={isFirst}
-              style={{
-                padding: '7px 14px',
-                borderRadius: '999px',
-                backgroundColor: 'rgba(255, 255, 255, 0.06)',
-                border: '1px solid rgba(255, 255, 255, 0.12)',
-                color: isFirst ? '#475569' : '#e2e8f0',
-                fontSize: '12.5px',
-                fontWeight: 700,
-                cursor: isFirst ? 'not-allowed' : 'pointer',
-                display: 'flex',
-                alignItems: 'center',
-                gap: '6px',
-                opacity: isFirst ? 0.4 : 1,
-              }}
-            >
-              <ArrowLeft size={14} />
-              <span>Sebelumnya</span>
-            </button>
-
-            {/* Next Stop or Finish */}
-            <button
-              onClick={nextTourStop}
-              className="cosmic-btn cosmic-btn-gold"
-              style={{
-                padding: '8px 20px',
-                fontSize: '13.5px',
-                fontWeight: 800,
-              }}
-            >
-              <span>{isLast ? 'Selesaikan Tur Antariksa' : 'Lanjut Berkeliling'}</span>
-              {isLast ? <CheckCircle2 size={16} /> : <ArrowRight size={16} />}
+              <span>{isTourAutoplay ? 'Otomatis' : 'Otomatis'}</span>
             </button>
 
             {/* Exit Tour */}
             <button
               onClick={stopGuidedTour}
               style={{
-                padding: '7px 14px',
+                minHeight: '44px',
+                padding: isMobile ? '8px 12px' : '7px 14px',
                 borderRadius: '999px',
                 backgroundColor: 'transparent',
                 border: '1px solid rgba(255, 255, 255, 0.1)',

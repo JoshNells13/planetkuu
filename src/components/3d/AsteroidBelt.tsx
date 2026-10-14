@@ -2,10 +2,11 @@ import React, { useRef, useMemo } from 'react';
 import { useFrame } from '@react-three/fiber';
 import * as THREE from 'three';
 import { useGame } from '../../context/GameContext';
+import { sound } from '../../utils/sound';
 
 export const AsteroidBelt: React.FC = () => {
   const beltRef = useRef<THREE.Group>(null);
-  const { simulationSpeed, isPaused } = useGame();
+  const { simulationSpeed, isPaused, showAstroMessage } = useGame();
 
   const count = 350;
   const innerRadius = 20.2;
@@ -39,8 +40,19 @@ export const AsteroidBelt: React.FC = () => {
     }
   });
 
+  const handleClick = (e: { stopPropagation: () => void }) => {
+    e.stopPropagation();
+    sound.playAsteroidChime();
+    showAstroMessage('Ini Sabuk Asteroid! Jutaan batuan luar angkasa sisa pembentukan tata surya yang mengorbit di antara Mars dan Jupiter.', 'explaining');
+  };
+
   return (
-    <group ref={beltRef}>
+    <group
+      ref={beltRef}
+      onClick={handleClick}
+      onPointerOver={() => { document.body.style.cursor = 'pointer'; sound.playSubtleHover(); }}
+      onPointerOut={() => { document.body.style.cursor = 'auto'; }}
+    >
       {asteroids.map((ast, idx) => (
         <mesh key={idx} position={ast.position} rotation={ast.rotation} scale={ast.scale}>
           <dodecahedronGeometry args={[1, 0]} />

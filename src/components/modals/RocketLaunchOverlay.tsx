@@ -18,7 +18,7 @@ export const RocketLaunchOverlay: React.FC = () => {
   useEffect(() => {
     if (phase === 'countdown') {
       if (countdown > 0) {
-        sound.playClick();
+        sound.playCountdown(countdown);
         const timer = setTimeout(() => {
           setCountdown((prev) => prev - 1);
         }, 1000);
@@ -26,6 +26,7 @@ export const RocketLaunchOverlay: React.FC = () => {
       } else {
         // Meluncur!
         setPhase('liftoff');
+        sound.playCountdown(0);
         sound.playRocketLaunch();
         showAstroMessage('3... 2... 1... MELUNCURRR! Roket melesat menembus atmosfer Bumi!', 'celebrating');
 

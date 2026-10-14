@@ -1,17 +1,124 @@
-/* App specific responsive styles */
+/* App specific responsive styles for PlanetKuu */
+
+/* Default desktop display rules */
+.desktop-only {
+  display: flex !important;
+}
+
+.mobile-only {
+  display: none !important;
+}
+
+/* Touch Friendly Utilities */
+.touch-target {
+  min-height: 44px;
+  min-width: 44px;
+}
+
+/* Astro Companion Dialogue Container */
+.astro-dialogue-container {
+  position: fixed;
+  bottom: 24px;
+  left: 24px;
+  z-index: 35;
+  display: flex;
+  align-items: flex-end;
+  gap: 16px;
+  pointer-events: none;
+  max-width: calc(100vw - 48px);
+}
+
+/* Mobile & Tablet Responsive Breakpoint */
 @media (max-width: 768px) {
-  .hud-label {
+  .desktop-only {
     display: none !important;
   }
 
-  header[role="banner"] {
-    top: 8px !important;
-    left: 8px !important;
-    right: 8px !important;
+  .mobile-only {
+    display: flex !important;
   }
 
-  footer[role="region"] {
-    bottom: 12px !important;
-    right: 12px !important;
+  header[role="banner"] {
+    top: 10px !important;
+    left: 10px !important;
+    right: 10px !important;
+    gap: 8px !important;
+  }
+
+  .astro-dialogue-container {
+    bottom: 74px !important;
+    left: 8px !important;
+    right: 8px !important;
+    max-width: calc(100vw - 16px) !important;
+    gap: 8px !important;
+  }
+
+  /* Floating Mobile Exploration Dock */
+  .mobile-dock {
+    position: fixed;
+    bottom: 12px;
+    left: 8px;
+    right: 8px;
+    z-index: 40;
+    pointer-events: auto;
+    display: flex !important;
+    align-items: center;
+    gap: 8px;
+    padding: 7px 10px;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    border-radius: 999px;
+    background: rgba(8, 9, 12, 0.94);
+    backdrop-filter: blur(28px);
+    -webkit-backdrop-filter: blur(28px);
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    box-shadow: 0 16px 40px rgba(0, 0, 0, 0.95), 0 0 25px rgba(251, 191, 36, 0.15);
+  }
+
+  .mobile-dock::-webkit-scrollbar {
+    display: none;
+  }
+
+  .mobile-dock-btn {
+    min-height: 44px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    padding: 0 14px;
+    border-radius: 999px;
+    font-family: var(--font-display);
+    font-size: 13px;
+    font-weight: 700;
+    white-space: nowrap;
+    flex-shrink: 0;
+    cursor: pointer;
+    touch-action: manipulation;
+  }
+
+  /* Universal Mobile Modal Optimization */
+  .modal-container-mobile {
+    width: 95vw !important;
+    max-width: 100% !important;
+    max-height: 88vh !important;
+    border-radius: 20px !important;
+  }
+
+  .modal-tabs-mobile {
+    overflow-x: auto !important;
+    white-space: nowrap !important;
+    scrollbar-width: none !important;
+    -webkit-overflow-scrolling: touch !important;
+  }
+
+  .modal-tabs-mobile::-webkit-scrollbar {
+    display: none !important;
+  }
+
+  /* Ensure all interactive buttons are easy to tap */
+  .cosmic-btn {
+    min-height: 42px;
+    touch-action: manipulation;
   }
 }

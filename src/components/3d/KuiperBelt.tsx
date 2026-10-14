@@ -2,10 +2,11 @@ import React, { useRef, useMemo } from 'react';
 import { useFrame } from '@react-three/fiber';
 import * as THREE from 'three';
 import { useGame } from '../../context/GameContext';
+import { sound } from '../../utils/sound';
 
 export const KuiperBelt: React.FC = () => {
   const beltRef = useRef<THREE.Group>(null);
-  const { simulationSpeed, isPaused } = useGame();
+  const { simulationSpeed, isPaused, showAstroMessage } = useGame();
 
   const count = 400;
   const innerRadius = 43;
@@ -37,8 +38,19 @@ export const KuiperBelt: React.FC = () => {
     }
   });
 
+  const handleClick = (e: { stopPropagation: () => void }) => {
+    e.stopPropagation();
+    sound.playAsteroidChime();
+    showAstroMessage('Ini Sabuk Kuiper! Cincin es raksasa di tepi luar tata surya kita, tempat Pluto dan jutaan komet dingin mengorbit!', 'explaining');
+  };
+
   return (
-    <group ref={beltRef}>
+    <group
+      ref={beltRef}
+      onClick={handleClick}
+      onPointerOver={() => { document.body.style.cursor = 'pointer'; sound.playSubtleHover(); }}
+      onPointerOut={() => { document.body.style.cursor = 'auto'; }}
+    >
       {particles.map((p, idx) => (
         <mesh key={idx} position={p.pos} scale={p.scale}>
           <dodecahedronGeometry args={[1, 0]} />

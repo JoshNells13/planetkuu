@@ -37,7 +37,7 @@ export const AstroTalkModal: React.FC = () => {
   const [selectedFaq, setSelectedFaq] = useState<FAQ>(ASTRO_FAQS[0]);
 
   const handleSelectFaq = (faq: FAQ) => {
-    sound.playClick();
+    sound.playAstroBlip();
     setSelectedFaq(faq);
     showAstroMessage(faq.a.slice(0, 100) + '...', 'explaining');
   };
@@ -49,6 +49,7 @@ export const AstroTalkModal: React.FC = () => {
 
   return (
     <div
+      className="modal-backdrop-mobile"
       style={{
         position: 'fixed',
         inset: 0,
@@ -65,7 +66,7 @@ export const AstroTalkModal: React.FC = () => {
       }}
     >
       <div
-        className="glass-panel-glow"
+        className="glass-panel-glow modal-container-mobile"
         style={{
           width: '100%',
           maxWidth: '680px',

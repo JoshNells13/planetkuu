@@ -28,12 +28,11 @@ export const PlanetDetailModal: React.FC = () => {
 
   const handleAnswerSubmit = (optionIndex: number) => {
     if (activityAnswered) return;
-    sound.playClick();
     setSelectedAnswer(optionIndex);
     setActivityAnswered(true);
 
     if (optionIndex === activity.correctAnswerIndex) {
-      sound.playSuccess();
+      sound.playQuizCorrect();
       addXP(activity.xpReward, `Menyelesaikan aktivitas ${selectedPlanet.indonesianName}`);
 
       if (activity.badgeRewardId) {
@@ -49,12 +48,14 @@ export const PlanetDetailModal: React.FC = () => {
 
       showAstroMessage(`Hebat! ${activity.explanation}`, 'celebrating');
     } else {
+      sound.playQuizWrong();
       showAstroMessage('Belum tepat, tetapi jangan berkecil hati! Yuk, baca penjelasannya.', 'hint');
     }
   };
 
   return (
     <div
+      className="modal-backdrop-mobile"
       style={{
         position: 'fixed',
         inset: 0,
@@ -63,7 +64,7 @@ export const PlanetDetailModal: React.FC = () => {
         alignItems: 'center',
         justifyContent: 'center',
         padding: '16px',
-        backgroundColor: 'rgba(3, 7, 18, 0.85)',
+        backgroundColor: 'rgba(0, 0, 0, 0.88)',
         backdropFilter: 'blur(16px)',
       }}
       onClick={(e) => {
@@ -71,7 +72,7 @@ export const PlanetDetailModal: React.FC = () => {
       }}
     >
       <div
-        className="glass-panel-glow"
+        className="glass-panel-glow modal-container-mobile"
         style={{
           width: '100%',
           maxWidth: '740px',
@@ -80,6 +81,7 @@ export const PlanetDetailModal: React.FC = () => {
           display: 'flex',
           flexDirection: 'column',
           overflow: 'hidden',
+          backgroundColor: '#0a0b0e',
           boxShadow: `0 20px 50px rgba(0,0,0,0.8), 0 0 35px ${selectedPlanet.color}33`,
         }}
       >
@@ -183,17 +185,19 @@ export const PlanetDetailModal: React.FC = () => {
 
         {/* Navigation Tabs */}
         <div
+          className="modal-tabs-mobile"
           style={{
             display: 'flex',
-            padding: '8px 20px',
-            backgroundColor: 'rgba(10, 15, 44, 0.6)',
+            padding: '8px 16px',
+            backgroundColor: '#0a0b0e',
             borderBottom: '1px solid rgba(255, 255, 255, 0.08)',
             gap: '8px',
-            flexWrap: 'wrap',
+            overflowX: 'auto',
+            whiteSpace: 'nowrap',
           }}
         >
           <button
-            onClick={() => { sound.playClick(); setActiveTab('3d-view'); }}
+            onClick={() => { sound.playTabSwitch(); setActiveTab('3d-view'); }}
             style={{
               padding: '7px 14px',
               borderRadius: '999px',
@@ -214,7 +218,7 @@ export const PlanetDetailModal: React.FC = () => {
           </button>
 
           <button
-            onClick={() => { sound.playClick(); setActiveTab('fun'); }}
+            onClick={() => { sound.playTabSwitch(); setActiveTab('fun'); }}
             style={{
               padding: '7px 14px',
               borderRadius: '999px',
@@ -235,7 +239,7 @@ export const PlanetDetailModal: React.FC = () => {
           </button>
 
           <button
-            onClick={() => { sound.playClick(); setActiveTab('activity'); }}
+            onClick={() => { sound.playTabSwitch(); setActiveTab('activity'); }}
             style={{
               padding: '7px 14px',
               borderRadius: '999px',
@@ -259,7 +263,7 @@ export const PlanetDetailModal: React.FC = () => {
           </button>
 
           <button
-            onClick={() => { sound.playClick(); setActiveTab('science'); }}
+            onClick={() => { sound.playTabSwitch(); setActiveTab('science'); }}
             style={{
               padding: '7px 14px',
               borderRadius: '999px',

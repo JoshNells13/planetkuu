@@ -17,15 +17,15 @@ export const QuizModal: React.FC = () => {
 
   const handleSelectOption = (idx: number) => {
     if (isAnswered) return;
-    sound.playClick();
     setSelectedOption(idx);
     setIsAnswered(true);
 
     if (idx === currentQuestion.correctIndex) {
-      sound.playSuccess();
+      sound.playQuizCorrect();
       setScore((prev) => prev + 1);
       showAstroMessage('Jawabanmu tepat sekali! Pintar!', 'celebrating');
     } else {
+      sound.playQuizWrong();
       showAstroMessage('Belum tepat, tetapi tidak apa-apa! Yuk pelajari petunjuknya.', 'hint');
     }
   };
@@ -67,6 +67,7 @@ export const QuizModal: React.FC = () => {
 
   return (
     <div
+      className="modal-backdrop-mobile"
       style={{
         position: 'fixed',
         inset: 0,
@@ -75,7 +76,7 @@ export const QuizModal: React.FC = () => {
         alignItems: 'center',
         justifyContent: 'center',
         padding: '20px',
-        backgroundColor: 'rgba(3, 7, 18, 0.85)',
+        backgroundColor: 'rgba(0, 0, 0, 0.88)',
         backdropFilter: 'blur(16px)',
       }}
       onClick={(e) => {
@@ -83,14 +84,16 @@ export const QuizModal: React.FC = () => {
       }}
     >
       <div
-        className="glass-panel-glow"
+        className="glass-panel-glow modal-container-mobile"
         style={{
           width: '100%',
           maxWidth: '640px',
+          maxHeight: '90vh',
           borderRadius: '24px',
           display: 'flex',
           flexDirection: 'column',
           overflow: 'hidden',
+          backgroundColor: '#0a0b0e',
           boxShadow: '0 25px 60px rgba(0, 0, 0, 0.9), 0 0 35px rgba(255, 255, 255, 0.1)',
         }}
       >

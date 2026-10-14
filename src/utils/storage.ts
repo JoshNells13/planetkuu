@@ -13,6 +13,7 @@ export const DEFAULT_PROGRESS: UserProgress = {
   quizBestScore: 0,
   settings: {
     soundEnabled: true,
+    musicEnabled: true,
     orbitLinesVisible: true,
     labelsVisible: true,
     graphicsQuality: 'high',
@@ -69,6 +70,7 @@ export function loadUserProgress(): UserProgress {
       quizBestScore: typeof parsed.quizBestScore === 'number' ? parsed.quizBestScore : 0,
       settings: {
         soundEnabled: parsed.settings?.soundEnabled ?? true,
+        musicEnabled: parsed.settings?.musicEnabled ?? true,
         orbitLinesVisible: parsed.settings?.orbitLinesVisible ?? true,
         labelsVisible: parsed.settings?.labelsVisible ?? true,
         graphicsQuality: ['high', 'medium', 'low'].includes(parsed.settings?.graphicsQuality) ? parsed.settings.graphicsQuality : 'high',

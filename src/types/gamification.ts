@@ -9,6 +9,7 @@ export interface UserProgress {
   quizBestScore: number;
   settings: {
     soundEnabled: boolean;
+    musicEnabled: boolean;
     orbitLinesVisible: boolean;
     labelsVisible: boolean;
     graphicsQuality: 'high' | 'medium' | 'low';

@@ -5,6 +5,7 @@ import * as THREE from 'three';
 import type { PlanetData } from '../../types/astronomy';
 import { useGame } from '../../context/GameContext';
 import { getPlanetTexture, getSaturnRingTexture } from '../../utils/textures';
+import { sound } from '../../utils/sound';
 
 interface PlanetProps {
   planet: PlanetData;
@@ -77,6 +78,7 @@ export const Planet: React.FC<PlanetProps> = ({ planet, initialAngle = 0 }) => {
 
   const handleMoonClick = (e: { stopPropagation: () => void }) => {
     e.stopPropagation();
+    sound.playTelemetry();
     openPanel('easter-egg-lunar');
     showAstroMessage('Kamu menemukan Bulan! Mari kita selidiki pendaratan bersejarah Apollo 11 di sini!', 'celebrating');
   };
@@ -84,6 +86,7 @@ export const Planet: React.FC<PlanetProps> = ({ planet, initialAngle = 0 }) => {
   useEffect(() => {
     if (hovered) {
       document.body.style.cursor = 'pointer';
+      sound.playSubtleHover();
     } else {
       document.body.style.cursor = 'auto';
     }

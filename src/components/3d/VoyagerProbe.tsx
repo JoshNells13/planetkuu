@@ -17,7 +17,7 @@ export const VoyagerProbe: React.FC = () => {
 
   const handleClick = (e: { stopPropagation: () => void }) => {
     e.stopPropagation();
-    sound.playSuccess();
+    sound.playVoyagerSignal();
     triggerConfetti();
     addXP(40, 'Menemukan Wahana Antarbintang Voyager 1');
     showAstroMessage(

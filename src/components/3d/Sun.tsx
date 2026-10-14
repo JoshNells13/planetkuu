@@ -4,6 +4,7 @@ import { Html } from '@react-three/drei';
 import * as THREE from 'three';
 import { SUN_DATA } from '../../data/planets';
 import { useGame } from '../../context/GameContext';
+import { sound } from '../../utils/sound';
 
 export const Sun: React.FC = () => {
   const meshRef = useRef<THREE.Mesh>(null);
@@ -21,6 +22,7 @@ export const Sun: React.FC = () => {
 
   const handleClick = (e: { stopPropagation: () => void }) => {
     e.stopPropagation();
+    sound.playSolarPulse();
     showAstroMessage('Ini Matahari! Bintang raksasa bercahaya yang menjadi pusat gravitasi seluruh tata surya kita.', 'explaining');
   };
 
@@ -30,7 +32,10 @@ export const Sun: React.FC = () => {
       <mesh
         ref={meshRef}
         onClick={handleClick}
-        onPointerOver={() => { document.body.style.cursor = 'pointer'; }}
+        onPointerOver={() => {
+          document.body.style.cursor = 'pointer';
+          sound.playSubtleHover();
+        }}
         onPointerOut={() => { document.body.style.cursor = 'auto'; }}
       >
         <sphereGeometry args={[SUN_DATA.radius, 36, 36]} />
